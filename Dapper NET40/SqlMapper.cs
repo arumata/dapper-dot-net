@@ -2953,6 +2953,11 @@ this IDbConnection cnn, string sql, Func<TFirst, TSecond, TThird, TFourth, TRetu
             return CreateParamInfoGenerator(identity, checkForDuplicates, removeUnused, GetLiteralTokens(identity.sql));
         }
 
+        /// <summary>
+        /// function for additional lookup DbType
+        /// </summary>
+        public static Func<PropertyInfo, DbType?> ExternalLookupDbType { get; set; }
+
         internal static Action<IDbCommand, object> CreateParamInfoGenerator(Identity identity, bool checkForDuplicates, bool removeUnused, IList<LiteralToken> literals)
         {
             Type type = identity.parametersType;
@@ -3053,8 +3058,14 @@ this IDbConnection cnn, string sql, Func<TFirst, TSecond, TThird, TFourth, TRetu
                     il.EmitCall(OpCodes.Callvirt, prop.PropertyType.GetMethod("AddParameter"), null); // stack is now [parameters]
                     continue;
                 }
-                ITypeHandler handler;
-                DbType dbType = LookupDbType(prop.PropertyType, prop.Name, true, out handler);
+                ITypeHandler handler = null;
+
+                DbType? lookupDbType = null;
+                if (ExternalLookupDbType != null)
+                    // ReSharper disable once EventExceptionNotDocumented
+                    lookupDbType = ExternalLookupDbType(prop);
+
+                DbType dbType = lookupDbType.HasValue ? (DbType)lookupDbType : LookupDbType(prop.PropertyType, prop.Name, true, out handler);
                 if (dbType == DynamicParameters.EnumerableMultiParameter)
                 {
                     // this actually represents special handling for list types;
