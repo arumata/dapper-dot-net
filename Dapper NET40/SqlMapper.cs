@@ -3868,10 +3868,16 @@ Type type, IDataReader reader, int startBound = 0, int length = -1, bool returnN
             il.EndExceptionBlock();
 
             il.Emit(OpCodes.Ldloc_1); // stack is [rval]
-            if (type.IsValueType)
+
+            var methodInfo = type.GetMethod("MarkAsPersistent", BindingFlags.NonPublic | BindingFlags.Instance);
+            if (methodInfo != null)
             {
-                il.Emit(OpCodes.Box, type);
+                il.EmitCall(OpCodes.Call, methodInfo, null);
+                il.Emit(OpCodes.Ldloc_1); // stack is [rval]
             }
+
+            if (type.IsValueType)
+                il.Emit(OpCodes.Box, type);
             il.Emit(OpCodes.Ret);
 
             return (Func<IDataReader, object>)dm.CreateDelegate(typeof(Func<IDataReader, object>));
