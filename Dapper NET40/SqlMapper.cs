@@ -3099,7 +3099,7 @@ this IDbConnection cnn, string sql, Func<TFirst, TSecond, TThird, TFourth, TRetu
                     il.Emit(OpCodes.Ldstr, prop.Name); // stack is now [parameters] [parameters] [parameter] [parameter] [name]
                     il.EmitCall(OpCodes.Callvirt, typeof(IDataParameter).GetProperty("ParameterName").GetSetMethod(), null);// stack is now [parameters] [parameters] [parameter]
                 }
-                if (prop.PropertyType.IsEnum)
+                if (prop.PropertyType.IsEnum || (prop.PropertyType.IsValueType && Nullable.GetUnderlyingType(prop.PropertyType) != null && Nullable.GetUnderlyingType(prop.PropertyType).IsEnum))
                 {
                     il.Emit(OpCodes.Nop);
                 }
