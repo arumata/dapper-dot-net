@@ -4,10 +4,10 @@
     <id>Dapper.A</id>
     <version>1.40</version>
     <title>Dapper dot net</title>
-    <authors>Sam Saffron,Marc Gravell</authors>
+    <authors>Sam Saffron,Marc Gravell,Arumata</authors>
     <owners>Sam Saffron,Marc Gravell</owners>
     <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
-    <projectUrl>https://github.com/StackExchange/dapper-dot-net</projectUrl>
+    <projectUrl>https://github.com/arumata/dapper-dot-net.git</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A high performance Micro-ORM supporting Sql Server, MySQL, Sqlite, SqlCE, Firebird etc..</description>
     <summary>A high performance Micro-ORM</summary>
